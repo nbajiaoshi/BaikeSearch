@@ -12,7 +12,10 @@ def segText(thu, filename, src_dir, out_dir):
 				for in_line in f.readlines():
 					if not in_line.split():
 						continue
-					res = thu.cut(in_line)
+					try:
+						res = thu.cut(in_line)
+					except:
+						print in_line
 					try:	
 						g.write(" ".join(res))
 					except:
