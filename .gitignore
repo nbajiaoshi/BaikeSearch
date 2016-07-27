@@ -1,6 +1,8 @@
 # Zihao's gitignore info goes here
 LAC/THULAC_lite_python_v1/thulac/models/
 LAC/data/
+LAC/segText/
+
 
 # Luyu's gitignore info goes here
 
