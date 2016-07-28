@@ -1,0 +1,1 @@
+print(int(re.search('\d+','/subview/92403/58157034.htm').group(0)) % 2 == 0)
