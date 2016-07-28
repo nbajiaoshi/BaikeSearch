@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * Created by hadoop on 16-6-10.
  */
 public class InvertedIndex {
-    public static class Map extends Mapper<LongWritable, Text, Text, Text>
+    public static class Map extends Mapper<LongWritable, Text, Text, LongWritable>
     {
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
@@ -51,21 +51,21 @@ public class InvertedIndex {
             Matcher m = pattern.matcher(line);
             while (m.find()){
                 word.set(line.substring(m.start(),m.end()));
-                context.write(word,new Text(fileName));
+                context.write(word,new LongWritable(Integer.parseInt(fileName)));
             }
         }
     }
-    public static class Reduce extends Reducer<Text, Text, Text, Text>
+    public static class Reduce extends Reducer<Text, LongWritable, Text, Text>
     {
-        protected void reduce(Text key, Iterable<Text> values, Context context)
+        protected void reduce(Text key, Iterable<LongWritable> values, Context context)
                 throws IOException, InterruptedException {
             Set<String> docs = new HashSet<String>();
             StringBuilder s = new StringBuilder();
-            for (Text t : values){
+            for (LongWritable t : values){
                 String doc = t.toString();
                 if (!docs.contains(doc)){
                     docs.add(doc);
-                    s.append(doc + " ");
+                    s.append(doc + ",");
                 }
             }
             context.write(key,new Text(s.toString()));
@@ -86,20 +86,23 @@ public class InvertedIndex {
         return job.waitForCompletion(true);
     }
 
-    private static boolean initialInvertedIndex(String inputPath) throws Exception {
+    private static boolean initialInvertedIndex(String inputPath, String outputPath) throws Exception {
         Configuration conf = new Configuration();
         Job job = new Job(conf, "Inverted Index");
         job.setJarByClass(InvertedIndex.class);
         job.setMapperClass(Map.class);         //为job设置Mapper类
         job.setReducerClass(Reduce.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputValueClass(LongWritable.class);
         FileInputFormat.setInputPaths(job, new Path(inputPath));
-        FileOutputFormat.setOutputPath(job, new Path("output1"));
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));
         return job.waitForCompletion(true);
     }
 
     public static void main(String[] args) throws Exception    {
-        System.exit(initialInvertedIndex(args[0]) ?0:1);
+        for (int i = 1; i < 6; i++){
+            initialInvertedIndex("segText" + i, "BaikeSearch/InvertedIndex/output0" + i);
+        }
+//        System.exit( ?0:1);
     }
 }
