@@ -7,6 +7,7 @@ GIT_DIR = dirname(ROOT_DIR)
 PAGE_RANK_DIR = join(GIT_DIR, 'PageRank')
 INVERTED_INDEX_DIR = join(GIT_DIR, 'InvertedIndex')
 PAGE_RANK_RESULT = join(PAGE_RANK_DIR, 'result.txt')
+INVERTED_INDEX_RESULT = join(INVERTED_INDEX_DIR, 'output2', 'part-r-00000')
 CATALOG = join(DATA_DIR, 'catalog.txt')
 
 

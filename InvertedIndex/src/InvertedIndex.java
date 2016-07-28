@@ -86,7 +86,7 @@ public class InvertedIndex {
         return job.waitForCompletion(true);
     }
 
-    private static boolean initialInvertedIndex(String inputPath) throws Exception {
+    private static boolean initialInvertedIndex(String inputPath, String outputPath) throws Exception {
         Configuration conf = new Configuration();
         Job job = new Job(conf, "Inverted Index");
         job.setJarByClass(InvertedIndex.class);
@@ -95,11 +95,14 @@ public class InvertedIndex {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
         FileInputFormat.setInputPaths(job, new Path(inputPath));
-        FileOutputFormat.setOutputPath(job, new Path("output1"));
+        FileOutputFormat.setOutputPath(job, new Path(outputPath));
         return job.waitForCompletion(true);
     }
 
     public static void main(String[] args) throws Exception    {
-        System.exit(initialInvertedIndex(args[0]) ?0:1);
+        for (int i = 1; i < 6; i++){
+            initialInvertedIndex("segText" + i, "BaikeSearch/InvertedIndex/output0" + i);
+        }
+//        System.exit( ?0:1);
     }
 }

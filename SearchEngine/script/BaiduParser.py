@@ -7,7 +7,7 @@ from threading import Thread
 import time
 
 
-total = 10000
+total = 100000000
 deep_list = []
 done_list = set([])
 load_count = 1
