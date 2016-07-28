@@ -2,7 +2,8 @@
 LAC/THULAC_lite_python_v1/thulac/models/
 LAC/data/
 LAC/segText/
-
+FrontEnd/.idea
+FrontEnd/.DS_Store
 
 # Luyu's gitignore info goes here
 
