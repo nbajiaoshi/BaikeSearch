@@ -303,22 +303,27 @@
         return true;
     };
 
-    function cleanTableBody(table) {
-        
-    };
-
     function addRowToTable(table, first, second) {
-
+        var row = document.createElement("tr");
+        var td1 = document.createElement("td");
+        var td2 = document.createElement("td");
+        td1.text() = first;
+        td2.text() = second;
+        row.appendChild(td1);
+        row.appendChild(td2);
+        table.appendChild(row);
     };
 
     function fillBasicInfo(info_dic){
-        var my_info = info_dic.parseJSON();
+        //var my_info = info_dic.parseJSON();
+        var my_info = JSON.parse(info_dic.toString());
         var table_body = document.getElementById("info_body");
-        cleanTableBody(table_body);
+        //清空table
+        $("#info_body").find("tr").remove();
         if (isEmpty(my_info["title"])) {
-            $("#search_title").text() = "对不起我们未能找到您想要的知识";
+            $("#search_title").text("对不起我们未能找到您想要的知识");
         } else {
-            $("#search_title").text() = "有关" + my_info["title"] + " 你知道吗?";
+            $("#search_title").text("有关" + my_info["title"] + " 你知道吗?");
             //添加当前元素
             info_box = my_info["basic_info"];
             for(var i = 0, l = info_box.length; i < l; i++) {
@@ -331,6 +336,7 @@
         var query = $("#input_query").val();
         $.get("query/"+query, function(data,status){
             alert("数据: " + data + "\n状态: " + status);
+            fillBasicInfo(data);
         });
     });
 
