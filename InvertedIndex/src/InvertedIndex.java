@@ -26,24 +26,16 @@ public class InvertedIndex {
     {
         private final static IntWritable one = new IntWritable(1);
         private Text word = new Text();
-        private static final Set<String> stopWords = new HashSet<String>();
         private FileSystem fs;
 
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
-            Configuration conf = new Configuration();
-            fs = FileSystem.get(conf);
-            FSDataInputStream in = fs.open(new Path("output/part-r-00000"));
-            while (true) {
-                String line = in.readLine();
-                if (line == null || line.isEmpty())
-                    break;
-                String ss[] = line.split("\\s+");
-                if (Integer.parseInt(ss[1]) > 40000){
-                    System.out.println("============================:" + ss[0] + "   " + ss[1]);
-                    stopWords.add(ss[0]);
-                }
-            }
+            FileSplit fs = (FileSplit)context.getInputSplit();
+            String fileName = fs.getPath().getName();
+            Matcher prefixFilter = Pattern.compile("\\d+").matcher(fileName);
+            if (prefixFilter.find())
+                fileName = prefixFilter.group(0);
+            System.out.println("========================================:" + fileName);
         }
 
         @Override
@@ -51,15 +43,15 @@ public class InvertedIndex {
                 throws IOException, InterruptedException {
             FileSplit fs = (FileSplit)context.getInputSplit();
             String line = value.toString().toLowerCase();
-            Matcher angleBraket = Pattern.compile("<[^>]+>").matcher(line);
-            angleBraket.replaceAll(" ");
             String fileName = fs.getPath().getName();
-            Pattern pattern = Pattern.compile("[^\\s]+");
+            Matcher prefixFilter = Pattern.compile("\\d+").matcher(fileName);
+            if (prefixFilter.find())
+                fileName = prefixFilter.group(0);
+            Pattern pattern = Pattern.compile("\\w+|[\\u4e00-\\u9fa5]+");
             Matcher m = pattern.matcher(line);
             while (m.find()){
                 word.set(line.substring(m.start(),m.end()));
-                if (!stopWords.contains(word.toString()))
-                    context.write(word,new Text(fileName));
+                context.write(word,new Text(fileName));
             }
         }
     }
@@ -108,6 +100,6 @@ public class InvertedIndex {
     }
 
     public static void main(String[] args) throws Exception    {
-        System.exit(initialWordCount(args[0]) && initialInvertedIndex(args[0]) ?0:1);
+        System.exit(initialInvertedIndex(args[0]) ?0:1);
     }
 }

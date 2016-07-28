@@ -28,7 +28,7 @@ public class WordCount
             String line = value.toString().toLowerCase();
             Matcher angleBraket = Pattern.compile("<[^>]+>").matcher(line);
             angleBraket.replaceAll(" ");
-            Pattern pattern = Pattern.compile("[^\\s]+");
+            Pattern pattern = Pattern.compile("\\w+|[\\u4e00-\\u9fa5]+");
             Matcher m = pattern.matcher(line);
 
             while (m.find()){
