@@ -36,6 +36,7 @@ class SearchEngine:
         print("begain to load big data")
         with open(join(DATA_DIR, 'InvertedTableTotal.pickle'), 'rb') as f:
             self.inverted_index = pickle.load(f)
+        print("load finished")
 
     def intersect(self, list1, list2):
         result = []
@@ -50,12 +51,25 @@ class SearchEngine:
                 result.append(i)
         return result
 
-    def query(self, s, start=0, end=4, pic_limit=6):
-        print(s)
+    def query(self, s, start=0, end=4, pic_limit=6): 
+        s = "清华"      
+        try:
+            print(s, type(s))
+            # s = str(s, encoding="utf-8")
+            # print("==========again============", s, type(s))
+            s = re.split("\\s+", s)
+        except BaseException as e:
+            print("========1=============\n",e,s)
+            try:
+                s = re.split("\\s+", s)
+            except BaseException as e:
+                print("========2=============\n",e)
+                s = ["清华大学"]
+        print(s, "before cut")
         s = list(set([x for x in s if x in self.inverted_index]))
-        print(s)
+        print(s, "after cut")
         if len(s) < 1:
-            return []
+            s = ["清华大学"]
         if len(s) < 2:
             result = trunc_list(self.inverted_index[s[0]], start, end)
         else:

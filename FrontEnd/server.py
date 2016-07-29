@@ -28,7 +28,7 @@ def index():
 
 @app.route('/query/<query>')
 def search(query):
-    query = query.encode("utf-8")
+    query = query
     res = searchEngine.query(query)
     diction = {}
     diction["basic_info"] = res[0]
