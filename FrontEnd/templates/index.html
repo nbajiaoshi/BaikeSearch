@@ -332,6 +332,7 @@
     };
 
     function fillBasicInfo(my_info){
+        my_info = my_info["basic_info"];
         var table_body = document.getElementById("info_body");
         //清空table
         $("#info_body").find("tr").remove();
@@ -348,8 +349,8 @@
     };
 
     function updateLink(row, link_info) {
-        row.src = link_info[0];
-        row.text = link_info[1];
+        row.src = link_info;
+        row.text = link_info;
     };
 
     function fillOtherLink(my_info) {
