@@ -66,7 +66,6 @@ class SearchEngine:
                 print("========2=============\n",e)
                 search_words = ["清华大学"]
         search_words = list(set([x for x in search_words if x in self.inverted_index]))
-        print("s", search_words)
         if len(search_words) < 1:
             search_words = ["清华大学"]
         if len(search_words) < 2:
@@ -122,7 +121,7 @@ if __name__ == '__main__':
             s = search_engine.query(input("input keyword:"))
             with open(join(DATA_DIR, "example.json"), 'w', encoding='utf-8') as f:
                 json.dump(s, f, ensure_ascii=False, indent=2)
-            print(json.dumps(s, indent=2, ensure_ascii=False))
+            # print(json.dumps(s, indent=2, ensure_ascii=False))
         except BaseException as e:
             print("========5=============\n",e)
 
