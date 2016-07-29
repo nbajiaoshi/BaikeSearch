@@ -1,6 +1,6 @@
 import re
 from util import *
-from urllib.request import urlopen,URLError
+from urllib.request import urlopen, URLError
 from os.path import join
 from json import *
 from threading import Thread

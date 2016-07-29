@@ -1,26 +1,41 @@
+#coding:utf-8
 import json
+import re
+
+import gc
+
+import pickle
+from urllib.request import urlopen
+
 from util import *
 
 
 def trunc_list(l, start, end):
     if len(l) < start:
         return []
-    if end >= len(start):
+    if end >= len(l):
         return l[start:]
     return l[start:end]
 
 
 class SearchEngine:
     def __init__(self):
-        with open(join(DATA_DIR, 'InvertedTableTotal.json'), 'r', encoding="utf-8") as f:
-            self.inverted_index = json.load(f)
-        with open(CATALOG, 'r', encoding="utf-8") as f:
+        with open(CATALOG, 'r', encoding='utf-8') as f:
             f_lines = f.readlines()
         self.page_rank = [0] * (int(f_lines[-1].split('|')[0]) + 1)
+        self.website = [0] * (int(f_lines[-1].split('|')[0]) + 1)
         for line in f_lines:
-            self.page_rank[int(line.split('|')[0])] = int(line.split('|')[1])
-            if self.page_rank[int(line.split('|')[0])] > 1117383:
-                self.page_rank[int(line.split('|')[0])] = 0
+            ll = line.split('|')
+            ll[0] = int(ll[0])
+            ll[1] = int(ll[1])
+            self.page_rank[ll[0]] = ll[1]
+            self.website[ll[0]] = ll[3]
+            if self.page_rank[ll[0]] > 1117383:
+                self.page_rank[ll[0]] = 0
+        gc.collect()
+        print("begain to load big data")
+        with open(join(DATA_DIR, 'InvertedTableTotal.pickle'), 'rb') as f:
+            self.inverted_index = pickle.load(f)
 
     def intersect(self, list1, list2):
         result = []
@@ -35,9 +50,13 @@ class SearchEngine:
                 result.append(i)
         return result
 
-    def query(self, s, start=0, end=20):
+    def query(self, s, start=0, end=6, parse_website=False, pic_limit=6):
         # s = re.split("\\s+", s)
+        print(s)
         s = list(set([x for x in s if x in self.inverted_index]))
+        print(s)
+        if len(s) < 1:
+            return []
         if len(s) < 2:
             result = trunc_list(self.inverted_index[s[0]], start, end)
         else:
@@ -45,8 +64,49 @@ class SearchEngine:
             for i in range(1, len(s)):
                 result = self.intersect(result, self.inverted_index[s[i]])
             result = trunc_list(result, start, end)
+        print(result)
         result_json = []
-        for i in result:
-            with open(basic_info(i), 'r', encoding="utf-8") as f:
-                result_json.append(json.load(f))
-        return result_json
+        website_list = [BAIKE + self.website[i] for i in result]
+        if parse_website:
+            for i in website_list:
+                try:
+                    text = str(urlopen(i).read(), encoding="utf-8")
+                    result_json += re.findall(r'<img\s*src="(.*?jpg)"', text)
+                    if len(result_json) >= pic_limit:
+                        break
+                except BaseException as e:
+                    print(e)
+        else:
+            for i in result:
+                try:
+                    with open(basic_info(i), 'r', encoding='utf-8') as f:
+                        result_json.append(json.load(f))
+                except BaseException as e:
+                    print(e)
+
+        return result_json, website_list
+
+
+if __name__ == '__main__':
+    text = str(urlopen(BAIKE + '/view/1563.htm').read(), encoding="utf-8")
+    print(re.findall(r'<img\s*src="(.*?jpg)"', text))
+    print(["清华", "紫荆", "学生"])
+    # print(raw_input("input keyword:"))
+    search_engine = SearchEngine()
+    print("build finished")
+    print(search_engine.query(["清华", "紫荆", "学生"]))
+    print(search_engine.inverted_index.keys())
+    while True:
+        try:
+            print(json.dumps(
+                search_engine.query(re.split("\\s+", input("input keyword:")), parse_website=True), indent=2))
+        except BaseException as e:
+            print(e)
+        try:
+            print(json.dumps(
+                search_engine.query(re.split("\\s+", input("input keyword:"))), indent=2))
+        except BaseException as e:
+            print(e)
+
+
+
