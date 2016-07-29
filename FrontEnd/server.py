@@ -28,8 +28,11 @@ def index():
 @app.route('/query/<query>')
 def search(query):
     query = query.encode("utf-8")
-    return '{"result":true,"count":1}'
+    print(query)
+    res = searchEngine.query(query)
+    print(res)
+    return res
 
 
 if __name__ == '__main__':
-    app.run(port=1339)
+    app.run(host='0.0.0.0', port=1339)
