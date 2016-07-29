@@ -50,8 +50,7 @@ class SearchEngine:
                 result.append(i)
         return result
 
-    def query(self, s, start=0, end=6, parse_website=False, pic_limit=6):
-        # s = re.split("\\s+", s)
+    def query(self, s, start=0, end=4, pic_limit=6):
         print(s)
         s = list(set([x for x in s if x in self.inverted_index]))
         print(s)
@@ -64,49 +63,48 @@ class SearchEngine:
             for i in range(1, len(s)):
                 result = self.intersect(result, self.inverted_index[s[i]])
             result = trunc_list(result, start, end)
-        print(result)
         result_json = []
+        pic_web = []
         website_list = [BAIKE + self.website[i] for i in result]
-        if parse_website:
-            for i in website_list:
-                try:
-                    text = str(urlopen(i).read(), encoding="utf-8")
-                    result_json += re.findall(r'<img\s*src="(.*?jpg)"', text)
-                    if len(result_json) >= pic_limit:
-                        break
-                except BaseException as e:
-                    print(e)
-        else:
-            for i in result:
-                try:
-                    with open(basic_info(i), 'r', encoding='utf-8') as f:
-                        result_json.append(json.load(f))
-                except BaseException as e:
-                    print(e)
+        for i in website_list:
+            try:
+                text = str(urlopen(i).read(), encoding="utf-8")
+                pic_web += re.findall(r'<img\s*src="(.*?jpg)"', text)
+                if len(pic_web) >= pic_limit:
+                    pic_web = pic_web[:pic_limit]
+                    break
+            except BaseException as e:
+                print(e)
+        for i in result:
+            try:
+                with open(basic_info(i), 'r', encoding='utf-8') as f:
+                    result_json.append(json.load(f))
+            except BaseException as e:
+                print(e)
 
-        return result_json, website_list
+        return [result_json, pic_web, website_list]
 
 
 if __name__ == '__main__':
-    text = str(urlopen(BAIKE + '/view/1563.htm').read(), encoding="utf-8")
-    print(re.findall(r'<img\s*src="(.*?jpg)"', text))
+    # text = str(urlopen(BAIKE + '/view/1563.htm').read(), encoding="utf-8")
+    # print(re.findall(r'<img\s*src="(.*?jpg)"', text))
     print(["清华", "紫荆", "学生"])
-    # print(raw_input("input keyword:"))
-    search_engine = SearchEngine()
-    print("build finished")
-    print(search_engine.query(["清华", "紫荆", "学生"]))
-    print(search_engine.inverted_index.keys())
-    while True:
-        try:
-            print(json.dumps(
-                search_engine.query(re.split("\\s+", input("input keyword:")), parse_website=True), indent=2))
-        except BaseException as e:
-            print(e)
-        try:
-            print(json.dumps(
-                search_engine.query(re.split("\\s+", input("input keyword:"))), indent=2))
-        except BaseException as e:
-            print(e)
+    # # print(raw_input("input keyword:"))
+    # search_engine = SearchEngine()
+    # print("build finished")
+    # print(search_engine.query(["清华", "紫荆", "学生"]))
+    # print(search_engine.inverted_index.keys())
+    # while True:
+    #     try:
+    #         print(json.dumps(
+    #             search_engine.query(re.split("\\s+", input("input keyword:")), parse_website=True), indent=2))
+    #     except BaseException as e:
+    #         print(e)
+    #     try:
+    #         print(json.dumps(
+    #             search_engine.query(re.split("\\s+", input("input keyword:"))), indent=2))
+    #     except BaseException as e:
+    #         print(e)
 
 
 
