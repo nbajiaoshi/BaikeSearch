@@ -353,7 +353,7 @@
     };
 
     function fillOtherLink(my_info) {
-        var linkList = my_info["links"]
+        var linkList = my_info["links"];
         updateLink(document.getElementById("link1"), linkList[0]);
         updateLink(document.getElementById("link2"), linkList[1]);
         updateLink(document.getElementById("link3"), linkList[2]);
@@ -365,7 +365,7 @@
     };
 
     function fillPics(my_info) {
-        var picList = my_info["pics"]
+        var picList = my_info["pics"];
         updatePic(document.getElementById("pic1"), picList[0]);
         updatePic(document.getElementById("pic2"), picList[1]);
         updatePic(document.getElementById("pic3"), picList[2]);
@@ -378,7 +378,7 @@
         var query = $("#input_query").val();
         $.get("query/"+query, function(data,status){
             alert("数据: " + data + "\n状态: " + status);
-            data = JSON.parse(data)
+            data = JSON.parse(data);
             fillBasicInfo(data);
             fillOtherLink(data);
             fillPics(data);
