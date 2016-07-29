@@ -51,12 +51,11 @@ class SearchEngine:
                 result.append(i)
         return result
 
-    def query(self, s, start=0, end=4, pic_limit=6): 
-        s = "清华"      
+    def query(self, s, start=0, end=4, pic_limit=6):
         try:
+            # print(s, type(s))
+            s = str(s, encoding="utf-8")
             print(s, type(s))
-            # s = str(s, encoding="utf-8")
-            # print("==========again============", s, type(s))
             s = re.split("\\s+", s)
         except BaseException as e:
             print("========1=============\n",e,s)
@@ -104,21 +103,15 @@ if __name__ == '__main__':
     # print(re.findall(r'<img\s*src="(.*?jpg)"', text))
     print(["清华", "紫荆", "学生"])
     # # print(raw_input("input keyword:"))
-    # search_engine = SearchEngine()
-    # print("build finished")
-    # print(search_engine.query(["清华", "紫荆", "学生"]))
-    # print(search_engine.inverted_index.keys())
-    # while True:
-    #     try:
-    #         print(json.dumps(
-    #             search_engine.query(re.split("\\s+", input("input keyword:")), parse_website=True), indent=2))
-    #     except BaseException as e:
-    #         print(e)
-    #     try:
-    #         print(json.dumps(
-    #             search_engine.query(re.split("\\s+", input("input keyword:"))), indent=2))
-    #     except BaseException as e:
-    #         print(e)
+    print(input("input keyword:"))
+    search_engine = SearchEngine()
+    print(search_engine.query(["清华", "紫荆", "学生"]))
+    while True:
+        try:
+            print(json.dumps(
+                search_engine.query(input("input keyword:").encode("utf-8")), indent=2))
+        except BaseException as e:
+            print(e)
 
 
 
