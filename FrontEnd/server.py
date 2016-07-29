@@ -18,7 +18,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 
 app = Flask(__name__)
 app_root = app.root_path
-# app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 
 
 @app.route('/')
@@ -31,7 +31,7 @@ def search(query):
     query = query.encode("utf-8")
     res = searchEngine.query(query)
     diction = {}
-    diction["basic_info"] = res[0][0]
+    diction["basic_info"] = res[0]
     diction["links"] = res[1]
     diction["pics"] = res[2]
     res = json.dumps(diction)
