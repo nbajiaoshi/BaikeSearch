@@ -18,7 +18,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, \
 
 app = Flask(__name__)
 app_root = app.root_path
-app.config['DEBUG'] = True
+# app.config['DEBUG'] = True
 
 
 @app.route('/')

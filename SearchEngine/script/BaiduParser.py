@@ -129,7 +129,7 @@ def rest():
         dump(deep_list[load_count:], f, indent=2)
 
 
-def parse():
+def parse(machine_id, total_machine):
     sleepy = 0
     global done_list
     global deep_list
@@ -138,7 +138,7 @@ def parse():
     global total
     for i in deep_list:
         print(i)
-        if int(re.search('\d+', i).group(0)) % 2 == 0 and not(i in done_list):
+        if int(re.search('\d+', i).group(0)) % total_machine == machine_id and not(i in done_list):
             try:
                 sleepy += 1
                 t = Thread(target=pick_up, args=(i, total + 1, ))
@@ -187,4 +187,4 @@ def parse():
 if __name__ == '__main__':
     load_list()
     update_total()
-    parse()
+    parse(int(sys.argv[0]),int(sys.argv[1]))

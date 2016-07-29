@@ -82,7 +82,7 @@ class SearchEngine:
             except BaseException as e:
                 print(e)
 
-        return [result_json, pic_web, website_list]
+        return [result_json, website_list, pic_web]
 
 
 if __name__ == '__main__':
