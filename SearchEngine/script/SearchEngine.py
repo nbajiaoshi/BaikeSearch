@@ -105,7 +105,7 @@ if __name__ == '__main__':
     # # print(raw_input("input keyword:"))
     print(input("input keyword:"))
     search_engine = SearchEngine()
-    print(search_engine.query(["清华", "紫荆", "学生"]))
+    print(search_engine.query("清华 紫荆 学生".encode("utf-8")))
     while True:
         try:
             print(json.dumps(
