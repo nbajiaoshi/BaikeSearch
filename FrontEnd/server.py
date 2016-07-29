@@ -30,6 +30,7 @@ def index():
 def search(query):
     query = query.encode("utf-8")
     res = searchEngine.query(query)
+    print(res)
     diction = {}
     diction["basic_info"] = res[0]
     diction["links"] = res[1]
