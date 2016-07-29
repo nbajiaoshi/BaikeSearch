@@ -4,6 +4,8 @@ LAC/data/
 LAC/segText/
 FrontEnd/.idea
 FrontEnd/.DS_Store
+SearchEngine/data/InvertedTableTotal.pickle
+SearchEngine/data/InvertedTableTotal.json
 
 # Luyu's gitignore info goes here
 
