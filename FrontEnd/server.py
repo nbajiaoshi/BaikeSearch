@@ -5,15 +5,12 @@ import os
 current_path = sys.path[0]
 
 search_engine_path = os.path.join(current_path, "..", "SearchEngine", "script")
-lac_path = os.path.join(current_path, "..", "LAC")
 
-sys.path.append(lac_path)
 sys.path.append(search_engine_path)
 
-import thulac
 import SearchEngine
 
-thu = thulac.thulac("-seg_only")
+searchEngine = SearchEngine.SearchEngine()
 
 from flask import Flask, request, session, g, redirect, url_for, abort, \
      render_template, flash
@@ -31,7 +28,6 @@ def index():
 @app.route('/query/<query>')
 def search(query):
     query = query.encode("utf-8")
-    print thu.cut(query)
     return '{"result":true,"count":1}'
 
 
