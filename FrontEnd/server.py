@@ -28,16 +28,23 @@ def index():
 
 @app.route('/query/<query>')
 def search(query):
-    query = query
     res = searchEngine.query(query)
     print(res)
-    diction = {}
-    diction["basic_info"] = res[0]
-    diction["links"] = res[1]
-    diction["pics"] = res[2]
-    res = json.dumps(diction)
+    py_dict = {}
+    basic_info_list = res[0]
+    links_list = res[1]
+    pics_list = res[2]
+
+    py_dict["basic_info"] = basic_info_list[0]
+    py_dict["pics"] = pics_list
+    links_rows = []
+    for i in range(4):
+        link_row = [links_list[i], basic_info_list[i]["title"]]
+        links_rows.append(link_row)
+    py_dict["links"] = links_rows
+    res = json.dumps(py_dict)
     return res
 
 
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=1339)
+    app.run(host='0.0.0.0', port=1330)
