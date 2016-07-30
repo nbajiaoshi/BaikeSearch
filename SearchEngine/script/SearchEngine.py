@@ -49,35 +49,55 @@ class SearchEngine:
                 return result
             if i == list2[j]:
                 result.append(i)
+        print(list1)
+        print(list2)
+        print(result)
         return result
 
     def query(self, s, start=0, end=4, pic_limit=6):
         try:
-            # print(s, type(s))
-            s = str(s, encoding="utf-8")
-            print(s, type(s))
-            s = re.split("\\s+", s)
+            # s = str(s, encoding="utf-8")
+            search_words = re.findall(r"\w+|[\u4e00-\u9fa5]+", s)
         except BaseException as e:
-            print("========1=============\n",e,s)
+            print("========1=============\n", e)
             try:
-                s = re.split("\\s+", s)
+                search_words = re.split("\\s+", search_words)
             except BaseException as e:
                 print("========2=============\n",e)
-                s = ["清华大学"]
-        print(s, "before cut")
-        s = list(set([x for x in s if x in self.inverted_index]))
-        print(s, "after cut")
-        if len(s) < 1:
-            s = ["清华大学"]
-        if len(s) < 2:
-            result = trunc_list(self.inverted_index[s[0]], start, end)
+                search_words = ["清华大学"]
+        search_words = list(set([x for x in search_words if x in self.inverted_index]))
+        if len(search_words) < 1:
+            search_words = ["清华大学"]
+        if len(search_words) < 2:
+            result = trunc_list(self.inverted_index[search_words[0]], start, end)
         else:
-            result = self.inverted_index[s[0]]
-            for i in range(1, len(s)):
-                result = self.intersect(result, self.inverted_index[s[i]])
-            result = trunc_list(result, start, end)
+            result = self.inverted_index[search_words[0]]
+            for i in range(1, len(search_words)):
+                result = self.intersect(result, self.inverted_index[search_words[i]])
+            result = trunc_list(result, start, end * 3)
         result_json = []
         pic_web = []
+        for i in result:
+            try:
+                with open(basic_info(i), 'r', encoding='utf-8') as f:
+                    result_json.append(json.load(f))
+            except BaseException as e:
+                print("========3=============\n",e)
+        j = 0
+        for i in range(len(result_json)):
+            if s.find(result_json[i]["title"]):
+                result[i], result[j] = result[j], result[i]
+                result_json[i], result_json[j] = result_json[j], result_json[i]
+                j += 1
+        for i in range(j, len(result_json)):
+            for tag in result_json[i]["tag"]:
+                if s.find(tag):
+                    result[i], result[j] = result[j], result[i]
+                    result_json[i], result_json[j] = result_json[j], result_json[i]
+                    j += 1
+                    break
+        result = trunc_list(result, start, end)
+        result_json = trunc_list(result_json, start, end)
         website_list = [BAIKE + self.website[i] for i in result]
         for i in website_list:
             try:
@@ -87,31 +107,23 @@ class SearchEngine:
                     pic_web = pic_web[:pic_limit]
                     break
             except BaseException as e:
-                print(e)
-        for i in result:
-            try:
-                with open(basic_info(i), 'r', encoding='utf-8') as f:
-                    result_json.append(json.load(f))
-            except BaseException as e:
-                print(e)
+                print("========4=============\n", e)
 
         return [result_json, website_list, pic_web]
 
 
 if __name__ == '__main__':
-    # text = str(urlopen(BAIKE + '/view/1563.htm').read(), encoding="utf-8")
-    # print(re.findall(r'<img\s*src="(.*?jpg)"', text))
-    print(["清华", "紫荆", "学生"])
-    # # print(raw_input("input keyword:"))
-    print(input("input keyword:"))
+    # print(input("input keyword:"))
     search_engine = SearchEngine()
-    print(search_engine.query("清华 紫荆 学生".encode("utf-8")))
+    print(search_engine.query("清华 紫荆"))
     while True:
         try:
-            print(json.dumps(
-                search_engine.query(input("input keyword:").encode("utf-8")), indent=2))
+            s = search_engine.query(input("input keyword:"))
+            with open(join(DATA_DIR, "example.json"), 'w', encoding='utf-8') as f:
+                json.dump(s, f, ensure_ascii=False, indent=2)
+            # print(json.dumps(s, indent=2, ensure_ascii=False))
         except BaseException as e:
-            print(e)
+            print("========5=============\n",e)
 
 
 
