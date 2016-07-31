@@ -6,6 +6,7 @@ FrontEnd/.idea
 FrontEnd/.DS_Store
 SearchEngine/data/InvertedTableTotal.pickle
 SearchEngine/data/InvertedTableTotal.json
+SearchEngine/data/BasicInfo
 
 # Luyu's gitignore info goes here
 

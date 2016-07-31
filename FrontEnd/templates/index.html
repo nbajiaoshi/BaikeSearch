@@ -324,8 +324,8 @@
         var row = document.createElement("tr");
         var td1 = document.createElement("td");
         var td2 = document.createElement("td");
-        td1.text() = first;
-        td2.text() = second;
+        td1.text = first;
+        td2.text = second;
         row.appendChild(td1);
         row.appendChild(td2);
         table.appendChild(row);
@@ -383,6 +383,7 @@
             fillBasicInfo(data);
             fillOtherLink(data);
             fillPics(data);
+            location.reload();
         });
     });
 
