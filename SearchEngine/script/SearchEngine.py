@@ -17,11 +17,13 @@ def download_picture(work_path, url):
     name = url.split('/')[-1]
     if not exists(work_path):
         mkdir(work_path)
-    if exists(join(work_path, name)):
+    filename = join(work_path, name)
+    if exists(filename):
         return
-    with open(join(work_path, name), 'wb') as f:
+    with open(filename, 'wb') as f:
         web = urlopen(url)
         f.write(web.read())
+    return filename
 
 
 def trunc_list(l, start, end):
