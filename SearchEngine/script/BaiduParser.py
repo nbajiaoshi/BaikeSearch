@@ -187,4 +187,4 @@ def parse(machine_id, total_machine):
 if __name__ == '__main__':
     load_list()
     update_total()
-    parse(int(sys.argv[0]),int(sys.argv[1]))
+    parse(int(sys.argv[0]), int(sys.argv[1]))

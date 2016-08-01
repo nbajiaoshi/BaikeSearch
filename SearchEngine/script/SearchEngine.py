@@ -5,9 +5,23 @@ import re
 import gc
 
 import pickle
+from os import mkdir
 from urllib.request import urlopen
 
+from os.path import exists
+
 from util import *
+
+
+def download_picture(work_path, url):
+    name = url.split('/')[-1]
+    if not exists(work_path):
+        mkdir(work_path)
+    if exists(join(work_path, name)):
+        return
+    with open(join(work_path, name), 'wb') as f:
+        web = urlopen(url)
+        f.write(web.read())
 
 
 def trunc_list(l, start, end):
@@ -33,7 +47,7 @@ class SearchEngine:
             if self.page_rank[ll[0]] > 1117383:
                 self.page_rank[ll[0]] = 0
         gc.collect()
-        print("begain to load big data")
+        print("begin to load big data")
         with open(join(DATA_DIR, 'InvertedTableTotal.pickle'), 'rb') as f:
             self.inverted_index = pickle.load(f)
         print("load finished")
@@ -109,7 +123,7 @@ class SearchEngine:
             except BaseException as e:
                 print("========4=============\n", e)
 
-        return [result_json, website_list, pic_web]
+        return [result_json, website_list, [download_picture(join(IMG_PATH, s), url) for url in pic_web]]
 
 
 if __name__ == '__main__':
@@ -123,7 +137,7 @@ if __name__ == '__main__':
                 json.dump(s, f, ensure_ascii=False, indent=2)
             # print(json.dumps(s, indent=2, ensure_ascii=False))
         except BaseException as e:
-            print("========5=============\n",e)
+            print("========5=============\n", e)
 
 
 

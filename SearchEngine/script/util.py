@@ -9,6 +9,7 @@ INVERTED_INDEX_DIR = join(GIT_DIR, 'InvertedIndex')
 PAGE_RANK_RESULT = join(PAGE_RANK_DIR, 'result.txt')
 INVERTED_INDEX_RESULT = join(INVERTED_INDEX_DIR, 'output2', 'part-r-00000')
 CATALOG = join(DATA_DIR, 'catalog.txt')
+IMG_PATH = join(GIT_DIR, 'FrontEnd', 'static', 'img')
 
 
 BAIKE = 'http://baike.baidu.com'
