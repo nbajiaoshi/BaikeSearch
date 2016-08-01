@@ -101,13 +101,13 @@ class SearchEngine:
                 print("========3=============\n",e)
         j = 0
         for i in range(len(result_json)):
-            if s.find(result_json[i]["title"]):
+            if s.find(result_json[i]["title"]) >= 0:
                 result[i], result[j] = result[j], result[i]
                 result_json[i], result_json[j] = result_json[j], result_json[i]
                 j += 1
         for i in range(j, len(result_json)):
             for tag in result_json[i]["tag"]:
-                if s.find(tag):
+                if s.find(tag) >= 0:
                     result[i], result[j] = result[j], result[i]
                     result_json[i], result_json[j] = result_json[j], result_json[i]
                     j += 1
