@@ -278,19 +278,19 @@
 
 <img class="col-md-3 col-md-3 col-sm-3 col-xs-12" src="../static/img/clients/img4.png" alt="client-4"-->
 
-<table class="table" align="center">
+<table class="table">
     <tbody>
-        <tr>
-            <td><a href="" id="link1">中文名称</a></td>
+        <tr align="center">
+            <td><a href="" id="link1" align="center">中文名称</a></td>
         </tr>
-        <tr>
-            <td><a href="" id="link2">英文名称</a></td>
+        <tr align="center">
+            <td><a href="" id="link2" align="center">英文名称</a></td>
         </tr>
-        <tr>
-            <td><a href="" id="link3">简称</a></td>
+        <tr align="center">
+            <td><a href="" id="link3" align="center">简称</a></td>
         </tr>
-        <tr>
-            <td><a href="" id="link4">所属洲</a></td>
+        <tr align="center">
+            <td><a href="" id="link4" align="center">所属洲</a></td>
         </tr>
     </tbody>
 </table>
@@ -324,8 +324,9 @@
         var row = document.createElement("tr");
         var td1 = document.createElement("td");
         var td2 = document.createElement("td");
-        td1.text = first;
-        td2.text = second;
+        //alert(first, second);
+        td1.innerHTML = first;
+        td2.innerHTML = second;
         row.appendChild(td1);
         row.appendChild(td2);
         table.appendChild(row);
@@ -350,7 +351,7 @@
 
     function updateLink(row, link_info) {
         row.src = link_info[0];
-        row.text = link_info[1];
+        row.innerHTML = link_info[1];
     };
 
     function fillOtherLink(my_info) {
@@ -378,12 +379,12 @@
     $("#button_submit").click(function(){
         var query = $("#input_query").val();
         $.get("query/"+query, function(data,status){
-            alert("数据: " + data + "\n状态: " + status);
+            //alert("数据: " + data + "\n状态: " + status);
             data = JSON.parse(data);
             fillBasicInfo(data);
             fillOtherLink(data);
             fillPics(data);
-            location.reload();
+            //location.reload();
         });
     });
 
